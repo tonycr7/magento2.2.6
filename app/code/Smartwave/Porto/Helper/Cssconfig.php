@@ -7,6 +7,7 @@ namespace Smartwave\Porto\Helper;
 
 class Cssconfig extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    const STATIC_MEDIA_PATH = 'pub/staticMedia/';
     protected $_storeManager;
     protected $generatedCssFolder;
     protected $generatedCssPath;
@@ -45,7 +46,7 @@ class Cssconfig extends \Magento\Framework\App\Helper\AbstractHelper
         $base = BP;
         
         $this->generatedCssFolder = 'porto/configed_css/';
-        $this->generatedCssPath = 'pub/media/'.$this->generatedCssFolder;
+        $this->generatedCssPath = self::STATIC_MEDIA_PATH.$this->generatedCssFolder;
         $this->generatedCssDir = $base.'/'.$this->generatedCssPath;
         
         parent::__construct($context);
@@ -53,7 +54,7 @@ class Cssconfig extends \Magento\Framework\App\Helper\AbstractHelper
     
     public function getBaseMediaUrl()
     {
-        return $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        return $this->_storeManager->getStore()->getBaseUrl() . self::STATIC_MEDIA_PATH;
     }
     
     public function getCssConfigDir()
@@ -76,3 +77,4 @@ class Cssconfig extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->getBaseMediaUrl().'porto/web/';
     }
 }
+
