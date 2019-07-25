@@ -86,7 +86,7 @@
                 ?>
             </div>
         <?php elseif($tab_style && $tab_style == "sticky"): ?>
-            <div class="product data items">
+            <div class="product data items" data-mage-init='{"tabs":{"openedState":"active"}}'>
                 <?php foreach ($detailedInfoGroup as $name):?>
                     <?php
                     $html = $layout->renderElement($name);
@@ -97,7 +97,8 @@
                     $label = $block->getChildData($alias, 'title');
                     $alias = str_replace(".","_",$alias);
                     ?>
-                    <div class="data item title">
+                    <div class="data item title <?php if($alias == 'reviews'):?>active<?php endif; ?>" aria-labeledby="tab-label-<?php /* @escapeNotVerified */ echo $alias;?>"		                            <div class="data item title">
+                        data-role="collapsible" id="tab-label-<?php /* @escapeNotVerified */ echo $alias;?>">
                         <a class="data switch" href="#<?php /* @escapeNotVerified */ echo $alias; ?>">
                             <?php /* @escapeNotVerified */ echo $label; ?>
                         </a>
@@ -108,7 +109,7 @@
                     $i = 1;
                     foreach($custom_cms_tabs as $_item) {
                         ?>
-                        <div class="data item title">
+                        <div class="data item title active">
                             <a class="data switch" href="#<?php /* @escapeNotVerified */ echo "custom-".$i; ?>">
                                 <?php /* @escapeNotVerified */ echo $_item['tab_title']; ?>
                             </a>
