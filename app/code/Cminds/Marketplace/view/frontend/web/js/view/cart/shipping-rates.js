@@ -78,7 +78,10 @@ define(
 							for (i = 0; i < data.length; ++i) {
 									var methodstemp = data[i].methods;
 								}
-							var shippingratesupplier = methodstemp[0].price;
+                            var shippingratesupplier = 0;
+							if(methodstemp.lenght) {
+							    shippingratesupplier = methodstemp[0].price;
+                            }
 							var mappedShippingRates = $.map(
 								window.checkoutConfig.supplierShippingRates,
 								function(data) {
