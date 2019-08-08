@@ -137,16 +137,12 @@ class GetProductsByVendors extends Action
             
             $supplierName = $this->supplierHelper->getSupplierNameForShippingMethods($supplierId);
 
-            if ($supplierId != 'non_supplier' && !empty($methodsArr)) {
-                $output[] = [
-                    'supplier_id' => $supplierId,
-                    'supplier_name' => $supplierName,
-                    'products' => $products,
-                    'methods' => $methodsArr,
-                ];
-            } else {
-                $output = [];
-            }
+            $output[] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierName,
+                'products' => $products,
+                'methods' => $methodsArr,
+            ];
         }
 
         return $result->setData(
