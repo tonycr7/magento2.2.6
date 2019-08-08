@@ -33,7 +33,7 @@ define(
         cartCache
     ) {
         'use strict';
-        var items  = quote.getItems();
+		var items  = quote.getItems();
         return Component.extend({
             defaults: {
                 template: 'Cminds_Marketplace/cart/shipping-rates'
@@ -67,41 +67,38 @@ define(
                     }
 
                     $.ajax({
-                        url: window.checkoutConfig.baseUrl+'/marketplace/checkout/getproductsbyvendors',
-                        type: "POST",
-                        showLoader: true,
-                        data: { json: JSON.stringify(
-                                items
-                            ),cid:countryId },
-                        dataType: 'json',
-                        success: function (data) {
-                            for (i = 0; i < data.length; ++i) {
-                                var methodstemp = data[i].methods;
-                            }
-                            var shippingratesupplier = 0;
-			    if(methodstemp.length){
-				shippingratesupplier = methodstemp[0].price;
-                            }
-                            var mappedShippingRates = $.map(
-                                window.checkoutConfig.supplierShippingRates,
-                                function(data) {
-                                    return {
-                                        'id': data.id,
-                                        'name': data.name,
-                                        'supplierId': parseInt(data.supplier_id),
-                                        'price': parseFloat(shippingratesupplier),
-                                        'selected': ko.observable(data.selected ? data.id : 0)
-                                    };
-                                }
-                            );
-                            self.supplierShippingRates(mappedShippingRates);
-                            setTimeout( function() {
-                                $('.supplier_methods').prop("disabled", false);
-                                $('.supplier_methods').removeAttr("disabled");
-                                $('.supplier_methods').click();
-                            }, 1000);
-                        }
-                    });
+						url: window.checkoutConfig.baseUrl+'/marketplace/checkout/getproductsbyvendors',
+						type: "POST",
+						showLoader: true,
+						data: { json: JSON.stringify(
+							items
+						),cid:countryId },
+						dataType: 'json',
+						success: function (data) {
+							for (i = 0; i < data.length; ++i) {
+									var methodstemp = data[i].methods;
+								}
+							var shippingratesupplier = methodstemp[0].price;
+							var mappedShippingRates = $.map(
+								window.checkoutConfig.supplierShippingRates,
+								function(data) {
+									return {
+										'id': data.id,
+										'name': data.name,
+										'supplierId': parseInt(data.supplier_id),
+										'price': parseFloat(shippingratesupplier),
+										'selected': ko.observable(data.selected ? data.id : 0)
+									};
+								}
+							);
+							self.supplierShippingRates(mappedShippingRates);
+							setTimeout( function() {
+									$('.supplier_methods').prop("disabled", false);
+									$('.supplier_methods').removeAttr("disabled");
+									$('.supplier_methods').click();
+							}, 1000);
+						}
+					});
                 });
 
                 this.shippingRates.subscribe(function (rates) {
