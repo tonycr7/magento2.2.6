@@ -75,28 +75,30 @@ define(
 						),cid:countryId },
 						dataType: 'json',
 						success: function (data) {
-							for (i = 0; i < data.length; ++i) {
-									var methodstemp = data[i].methods;
-								}
-							var shippingratesupplier = methodstemp[0].price;
-							var mappedShippingRates = $.map(
-								window.checkoutConfig.supplierShippingRates,
-								function(data) {
-									return {
-										'id': data.id,
-										'name': data.name,
-										'supplierId': parseInt(data.supplier_id),
-										'price': parseFloat(shippingratesupplier),
-										'selected': ko.observable(data.selected ? data.id : 0)
-									};
-								}
-							);
-							self.supplierShippingRates(mappedShippingRates);
-							setTimeout( function() {
-									$('.supplier_methods').prop("disabled", false);
-									$('.supplier_methods').removeAttr("disabled");
-									$('.supplier_methods').click();
-							}, 1000);
+                            if (data.length >= 1) {
+                                for (i = 0; i < data.length; ++i) {
+                                    var methodstemp = data[i].methods;
+                                }
+                                var shippingratesupplier = methodstemp[0].price;
+                                var mappedShippingRates = $.map(
+                                    window.checkoutConfig.supplierShippingRates,
+                                    function (data) {
+                                        return {
+                                            'id': data.id,
+                                            'name': data.name,
+                                            'supplierId': parseInt(data.supplier_id),
+                                            'price': parseFloat(shippingratesupplier),
+                                            'selected': ko.observable(data.selected ? data.id : 0)
+                                        };
+                                    }
+                                );
+                                self.supplierShippingRates(mappedShippingRates);
+                                setTimeout(function () {
+                                    $('.supplier_methods').prop("disabled", false);
+                                    $('.supplier_methods').removeAttr("disabled");
+                                    $('.supplier_methods').click();
+                                }, 1000);
+                            }
 						}
 					});
                 });
