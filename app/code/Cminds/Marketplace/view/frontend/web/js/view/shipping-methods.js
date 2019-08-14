@@ -88,6 +88,11 @@ define(
             initialize: function () {
                 var countryId = '';
                 $(document).on('change', "[name='country_id']", function () {
+                    // restrict ajax calls in payment page for performances issue
+                    var mainFieldset = $(this).closest("form");
+                    if(!mainFieldset.is(":visible")) {
+                        return;
+                    }
                    var countryId = $('[name="country_id"] > option:selected').val();
                    if (countryId == '') {
                         var countryId = quote.shippingAddress().countryId;
