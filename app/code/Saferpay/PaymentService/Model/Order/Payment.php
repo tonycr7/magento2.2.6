@@ -34,7 +34,6 @@ use Magento\Sales\Model\OrderRepository;
 use Saferpay\PaymentService\Helper\Constants;
 use Saferpay\PaymentService\Helper\ErrorLogger;
 use Saferpay\PaymentService\Helper\SecureTransaction;
-use Magento\Framework\Event\ManagerInterface;
 
 /**
  * Class Payment
@@ -62,8 +61,6 @@ class Payment extends AbstractModel
      * @var InvoiceManagementInterface
      */
     private $invoiceManagement;
-    
-    private $eventManager;
 
     /**
      * Payment constructor.
@@ -78,14 +75,12 @@ class Payment extends AbstractModel
         OrderRepository $orderRepository,
         SecureTransaction $secureTransactionHelper,
         ErrorLogger $logger,
-        InvoiceManagementInterface $invoiceManagement,
-        ManagerInterface $eventManager
+        InvoiceManagementInterface $invoiceManagement
     ) {
         $this->orderRepository = $orderRepository;
         $this->secureTransactionHelper = $secureTransactionHelper;
         $this->logger = $logger;
         $this->invoiceManagement = $invoiceManagement;
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -229,7 +224,7 @@ class Payment extends AbstractModel
             $invoice->setTransactionId($payment->getTransactionId());
             $order->addRelatedObject($invoice);
             $order->save();
-            $this->eventManager->dispatch('saferpay_invoice_creation', ['invoice' => $invoice]);
+
             return true;
         } catch (Exception $ex) {
             $this->logger->writeErrorLog(
