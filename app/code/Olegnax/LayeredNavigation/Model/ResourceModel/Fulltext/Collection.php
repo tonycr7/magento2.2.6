@@ -456,6 +456,74 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         return $this;
     }
 
+    public function addAttributeToSort($attribute, $dir = self::SORT_ORDER_ASC)
+    {
+        if ($attribute == 'position') {
+            if (isset($this->_joinFields[$attribute])) {
+                $this->getSelect()->order($this->_getAttributeFieldName($attribute) . ' ' . $dir);
+                return $this;
+            }
+            if ($this->isEnabledFlat()) {
+                $this->getSelect()->order("cat_index_position {$dir}");
+            }
+            // optimize if using cat index
+            $filters = $this->_productLimitationFilters;
+            if (isset($filters['category_id']) || isset($filters['visibility'])) {
+                $this->getSelect()->order([
+                    'cat_index.position ' . $dir,
+                    'e.entity_id ' . \Magento\Framework\DB\Select::SQL_DESC
+                ]);
+            } else {
+                $this->getSelect()->order('e.entity_id ' . $dir);
+            }
+
+            return $this;
+        } elseif ($attribute == 'is_saleable') {
+            $this->getSelect()->order("is_salable " . $dir);
+            return $this;
+        }
+
+        $storeId = $this->getStoreId();
+        if ($attribute == 'price' && $storeId != 0) {
+            $this->addPriceData();
+            if ($this->_productLimitationFilters->isUsingPriceIndex()) {
+                $this->getSelect()->order("price_index.min_price {$dir}");
+                return $this;
+            }
+        }
+        if ($attribute == 'product_discount' && $storeId != 0) {
+            if ($this->_productLimitationFilters->isUsingPriceIndex()) {
+                $this->getSelect()->columns(
+                    ['price_difference' => new \Zend_Db_Expr('(price_index.price - price_index.final_price)')]
+                );
+        
+                $this->getSelect()->order('price_difference '. "$dir");
+                return $this;
+            }
+        }
+
+
+        if ($this->isEnabledFlat()) {
+            $column = $this->getEntity()->getAttributeSortColumn($attribute);
+
+            if ($column) {
+                $this->getSelect()->order("e.{$column} {$dir}");
+            } elseif (isset($this->_joinFields[$attribute])) {
+                $this->getSelect()->order($this->_getAttributeFieldName($attribute) . ' ' . $dir);
+            }
+
+            return $this;
+        } else {
+            $attrInstance = $this->getEntity()->getAttribute($attribute);
+            if ($attrInstance && $attrInstance->usesSource()) {
+                $attrInstance->getSource()->addValueSortToCollection($this, $dir);
+                return $this;
+            }
+        }
+
+        return parent::addAttributeToSort($attribute, $dir);
+    }
+
     /**
      * Add order by entity_id
      *
