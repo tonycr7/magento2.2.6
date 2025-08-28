@@ -160,7 +160,7 @@ class ShipmentOrderRequestBuilder implements ShipmentOrderRequestBuilderInterfac
     ): ShipmentOrderRequestBuilderInterface {
         $this->data['recipient']['address']['name'] = $name;
         $this->data['recipient']['address']['countryCode'] = $countryCode;
-        $this->data['recipient']['address']['postalCode'] = $postalCode;
+        $this->data['recipient']['address']['postalCode'] = trim($postalCode);
         $this->data['recipient']['address']['city'] = $city;
         $this->data['recipient']['address']['streetName'] = $streetName;
         $this->data['recipient']['address']['streetNumber'] = $streetNumber;
