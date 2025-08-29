@@ -78,6 +78,7 @@ class ValueRenderer
         } else {
             $value = $field['value'];
         }
+        $value = $field['value'];
         switch ($field['type']) {
             case 'textarea':
                 break;
