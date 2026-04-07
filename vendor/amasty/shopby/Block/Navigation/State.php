@@ -201,7 +201,7 @@ class State extends \Magento\LayeredNavigation\Block\Navigation\State
      * @param Item $filter
      * @return string
      */
-    private function viewExtendedLabel($filter)
+    protected function viewExtendedLabel($filter)
     {
         if ($filter->getFilter()->getRequestVar() == \Amasty\Shopby\Model\Source\DisplayMode::ATTRUBUTE_PRICE) {
             $currencyRate = (float) $filter->getFilter()->getCurrencyRate();
